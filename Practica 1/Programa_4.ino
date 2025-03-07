@@ -1,7 +1,7 @@
-const int segmentos[] = {2, 3, 4, 5, 6, 7, 8}; 
-const int catodos[] = {10, 11, 12, 13, A0, A1};  
+const int SEGMENTOS[] = {2, 3, 4, 5, 6, 7, 8}; 
+const int DIGITOS[] = {10, 11, 12, 13, A0, A1};  
 
-const byte numeros[10] = {
+const byte NUMEROS[10] = {
   B0111111, // 0
   B0000110, // 1
   B1011011, // 2
@@ -14,42 +14,39 @@ const byte numeros[10] = {
   B1101111  // 9
 };
 
-void setup() {
+void configurarPines() {
   for (int i = 0; i < 7; i++) {
-    pinMode(segmentos[i], OUTPUT);
+    pinMode(SEGMENTOS[i], OUTPUT);
   }
   for (int i = 0; i < 6; i++) {
-    pinMode(catodos[i], OUTPUT);
-    digitalWrite(catodos[i], LOW);
+    pinMode(DIGITOS[i], OUTPUT);
+    digitalWrite(DIGITOS[i], LOW);
   }
-}
-
-void loop() {
-  // Encender un display a la vez en orden
-  for (int i = 0; i < 6; i++) {
-    apagarTodosLosDigitos();
-    mostrarNumero(i + 1);  // Mostrar su posición (1-6)
-    digitalWrite(catodos[i], HIGH); // Encender el display
-    delay(500);
-  }
-
-  // Mantener todos encendidos
-  for (int i = 0; i < 6; i++) {
-    mostrarNumero(i + 1);
-    digitalWrite(catodos[i], HIGH);
-  }
-  while (true); // Detener el loop
 }
 
 void mostrarNumero(int num) {
-  byte valor = numeros[num];
+  byte valor = NUMEROS[num];
   for (int i = 0; i < 7; i++) {
-    digitalWrite(segmentos[i], bitRead(valor, i));
+    digitalWrite(SEGMENTOS[i], bitRead(valor, i));
   }
 }
 
 void apagarTodosLosDigitos() {
   for (int i = 0; i < 6; i++) {
-    digitalWrite(catodos[i], LOW);
+    digitalWrite(DIGITOS[i], LOW);
+  }
+}
+
+void setup() {
+  configurarPines();
+}
+
+void loop() {
+  // Mostrar los números 1,2,3,4,5,6 en los 6 displays
+  for (int i = 0; i < 6; i++) {
+    apagarTodosLosDigitos();
+    mostrarNumero(i + 1);  // Mostrar número correspondiente al display
+    digitalWrite(DIGITOS[i], HIGH); // Encender el display
+    delay(1); // Breve retardo para multiplexado
   }
 }
